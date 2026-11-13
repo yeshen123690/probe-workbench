@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>三代探针 · 结构简式对照</title>
+<style>
+  :root{
+    --ink:#1a1f2e; --ink2:#4a5266; --ink3:#828a9c; --line:#e3e7ef; --bg:#f5f7fa;
+    --blue:#2158c4; --teal:#0d7a72; --amber:#a86400; --red:#c23a39; --org:#b06a10;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--bg); color:var(--ink);
+       font-family:"Microsoft YaHei","PingFang SC","Source Han Sans SC",sans-serif;
+       font-size:15px; line-height:1.75; padding:26px 30px 40px;}
+  .head{max-width:1280px; margin:0 auto;}
+  h1{font-size:21px; margin:0 0 6px;}
+  .sub{color:var(--ink2); font-size:14px; margin:0 0 16px;}
+  .tools{display:flex; align-items:center; gap:10px; margin:0 0 14px; font-size:13.5px; color:var(--ink2);}
+  .tools input{width:16px; height:16px; accent-color:var(--red);}
+
+  .row{display:flex; align-items:stretch; justify-content:center; gap:8px; flex-wrap:wrap; max-width:1280px; margin:0 auto;}
+  figure.card{margin:0; background:#fff; border:1px solid var(--line); border-radius:14px;
+              padding:12px 12px 14px; width:305px; display:flex; flex-direction:column;}
+  figure.card .svg{flex:1;}
+  figure.card svg{width:100%; height:auto; display:block;}
+  figure.card figcaption{border-top:1px dashed var(--line); padding-top:10px; margin-top:6px;}
+  figure.card .nm{font-weight:700; font-size:16px;}
+  figure.card .nm small{font-weight:400; color:var(--ink3); font-size:12px; margin-left:8px;}
+  figure.card .sys{color:var(--ink2); font-size:13px; margin-top:2px;}
+  .chip{display:inline-block; font-size:12px; border-radius:20px; padding:2px 12px; margin-top:8px;}
+  .chip.g{background:#e7f4ec; color:#1e7a4d;}
+  .chip.a{background:#fbf1df; color:var(--amber);}
+  .chip.t{background:#e4f2f0; color:var(--teal);}
+
+  .step{width:118px; display:flex; flex-direction:column; justify-content:center; text-align:center; gap:4px;}
+  .step .no{width:30px; height:30px; line-height:28px; border-radius:50%; margin:0 auto;
+            background:var(--red); color:#fff; font-weight:700; font-size:15px;}
+  .step.org .no{background:#e08c1a;}
+  .step .st{font-size:14px; color:var(--ink);}
+  .step .st b{color:var(--red);}
+  .step.org .st b{color:var(--org);}
+  .step .ss{font-size:12px; color:var(--ink3); line-height:1.6;}
+
+  .legend{display:flex; gap:22px; justify-content:center; margin:18px auto 0; font-size:13px; color:var(--ink2); flex-wrap:wrap;}
+  .sw{display:inline-block; width:14px; height:14px; border-radius:4px; vertical-align:-2px; margin-right:6px;}
+  .sw.r{background:rgba(226,75,74,.16); border:1px solid var(--red);}
+  .sw.o{background:rgba(239,159,39,.2); border:1px solid #d98d1f;}
+
+  .note{max-width:1280px; margin:18px auto 0; background:#fdf5e6; border:1px solid #f2e0bc;
+        border-radius:11px; padding:12px 18px; font-size:13px; color:#6d4400;}
+  .note b{color:#8a5300;}
+
+  /* 结构式笔画 */
+  .bd{stroke:#1c2230; stroke-width:1.9; fill:none; stroke-linecap:round;}
+  .lb{font-family:Georgia,"Times New Roman",serif; font-size:15.5px; fill:#1c2230;
+      paint-order:stroke; stroke:#fff; stroke-width:4px; text-anchor:middle; dominant-baseline:central;}
+  .lb.sm{font-size:12px;}
+  .hl-red{fill:rgba(226,75,74,.13); stroke:#e24b4a; stroke-width:1; opacity:.9;}
+  .hl-org{fill:rgba(239,159,39,.18); stroke:#d98d1f; stroke-width:1; opacity:.9;}
+  body.nohl .hl-red, body.nohl .hl-org{display:none;}
+</style>
+</head>
+<body>
+
+<div class="head">
+  <h1>三代探针 · 结构简式对照</h1>
+  <p class="sub">从 8-HQS 到 Zinquin 只有两步改造——色块标出的就是"变的地方"：红色是给体原子更换（第一步），橙色是新增 2-位甲基（第二步）。</p>
+  <div class="tools">
+    <label><input type="checkbox" id="hl" checked> 标出变化位置</label>
+  </div>
+</div>
+
+<div class="row">
+  <figure class="card">
+    <div class="svg" id="m-hq"></div>
+    <figcaption>
+      <div class="nm">8-HQS<small>8-羟基喹啉</small></div>
+      <div class="sys">给体：酚氧 O⁻ ＋ 喹啉 N（8 位）</div>
+      <span class="chip g">母体 · 四种离子来者不拒</span>
+    </figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="no">①</div>
+    <div class="st">8 位给体<br><b>O → N</b></div>
+    <div class="ss">给体换"软"：甩掉硬酸 Mg²⁺／Ca²⁺，顺带造成质子门控</div>
+  </div>
+
+  <figure class="card">
+    <div class="svg" id="m-tsq"></div>
+    <figcaption>
+      <div class="nm">TSQ 型<small>8-(对甲苯磺酰胺基)喹啉</small></div>
+      <div class="sys">给体：磺酰胺 N ＋ 喹啉 N</div>
+      <span class="chip a">Mg²⁺／Ca²⁺ 进不来了，Cu²⁺ 仍在</span>
+    </figcaption>
+  </figure>
+
+  <div class="step org">
+    <div class="no">②</div>
+    <div class="st">2 位<br><b>＋CH₃</b></div>
+    <div class="ss">堵死平面四方：Cu²⁺ 的优势构型摆不出来，Zn²⁺ 不受影响</div>
+  </div>
+
+  <figure class="card">
+    <div class="svg" id="m-zin"></div>
+    <figcaption>
+      <div class="nm">Zinquin<small>2-甲基-8-(对甲苯磺酰胺基)喹啉</small></div>
+      <div class="sys">电子层＋质子层＋几何层，三重屏蔽齐备</div>
+      <span class="chip t">只认 Zn²⁺：抓住，且点亮</span>
+    </figcaption>
+  </figure>
+</div>
+
+<div class="legend">
+  <span><span class="sw r"></span>变化 ①：8 位给体 O → N（电子层＋质子层）</span>
+  <span><span class="sw o"></span>变化 ②：2 位加甲基（几何层）</span>
+</div>
+
+<div class="note">
+  <b>画法说明：</b>芳环按教材规范的凯库勒式绘制（与工具五里的"环内圈"画法等价）。<b>文献事实：</b>真实 TSQ 在 6 位还有甲氧基（—OCH₃），Zinquin 在 6 位还有乙酯侧链（—OCH₂COOEt，帮助分子进入细胞）——它们属"应用层"改造，不影响"给体—质子—几何"三层识别逻辑，本页按课堂主线略去（教学处理）。
+</div>
+
+<script>
+(function(){
+  var R = 34, DX = 29.44, SQ3 = 58.89;
+
+  function hexV(cx, cy){           // 顶点在上下：0顶 1右上 2右下 3底 4左下 5左上
+    return [[cx,cy-R],[cx+DX,cy-R/2],[cx+DX,cy+R/2],[cx,cy+R],[cx-DX,cy+R/2],[cx-DX,cy-R/2]];
+  }
+  function hexRot(cx, cy){         // 顶点在左右：0右 1右上 2左上 3左 4左下 5右下
+    return [[cx+R,cy],[cx+R/2,cy-DX],[cx-R/2,cy-DX],[cx-R,cy],[cx-R/2,cy+DX],[cx+R/2,cy+DX]];
+  }
+  function ln(a, b, ta, tb){
+    var dx=b[0]-a[0], dy=b[1]-a[1], L=Math.hypot(dx,dy);
+    if (L-ta-tb < 3) return '';
+    var ux=dx/L, uy=dy/L;
+    return '<line class="bd" x1="'+(a[0]+ux*ta).toFixed(1)+'" y1="'+(a[1]+uy*ta).toFixed(1)+
+           '" x2="'+(b[0]-ux*tb).toFixed(1)+'" y2="'+(b[1]-uy*tb).toFixed(1)+'"/>';
+  }
+  function inner(a, b, c, ta, tb, off){     // 双键内线：向环心偏移
+    var mx=(a[0]+b[0])/2, my=(a[1]+b[1])/2;
+    var nx=c[0]-mx, ny=c[1]-my, NL=Math.hypot(nx,ny); nx/=NL; ny/=NL;
+    var dx=b[0]-a[0], dy=b[1]-a[1], L=Math.hypot(dx,dy), ux=dx/L, uy=dy/L;
+    var x1=a[0]+ux*ta+nx*off, y1=a[1]+uy*ta+ny*off;
+    var x2=b[0]-ux*tb+nx*off, y2=b[1]-uy*tb+ny*off;
+    return '<line class="bd" x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+
+           '" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'"/>';
+  }
+  function lb(p, t, sm){
+    return '<text class="lb'+(sm?' sm':'')+'" x="'+p[0].toFixed(1)+'" y="'+p[1].toFixed(1)+'">'+t+'</text>';
+  }
+  function ring(V, C, doubles, trims){
+    var s='', n=V.length;
+    for (var i=0;i<n;i++){
+      var j=(i+1)%n, ta=(trims&&trims[i])||0, tb=(trims&&trims[j])||0;
+      s+=ln(V[i],V[j],ta,tb);
+      for (var k=0;k<doubles.length;k++)
+        if (doubles[k][0]===i && doubles[k][1]===j) s+=inner(V[i],V[j],C,ta+7,tb+7,5);
+    }
+    return s;
+  }
+  function dbl(a, b, ta, tb){      // 端基双键（S=O）：两条平行线
+    var dx=b[0]-a[0], dy=b[1]-a[1], L=Math.hypot(dx,dy), ux=dx/L, uy=dy/L;
+    var px=-uy, py=ux, s='';
+    [2.8,-2.8].forEach(function(o){
+      s+='<line class="bd" x1="'+(a[0]+ux*ta+px*o).toFixed(1)+'" y1="'+(a[1]+uy*ta+py*o).toFixed(1)+
+         '" x2="'+(b[0]-ux*tb+px*o).toFixed(1)+'" y2="'+(b[1]-uy*tb+py*o).toFixed(1)+'"/>';
+    });
+    return s;
+  }
+
+  function svgFor(kind){
+    var pyr=hexV(0,0), bz=hexV(-SQ3,0), s='';
+    s+='<rect class="hl-red" x="-91" y="-96" width="64" height="33" rx="9"/>';
+    if (kind==='zin') s+='<rect class="hl-org" x="47" y="-61" width="56" height="33" rx="9"/>';
+
+    /* 喹啉母环：N1=pyr[0]顶，C2=右上，C3=右下，C4=底，C4a=左下，C8a=左上；
+       苯环：C8=顶，C7=左上，C6=左下，C5=底 */
+    s+=ring(pyr,[0,0],[[0,1],[2,3]],{0:11});
+    s+=ring(bz,[-SQ3,0],[[1,2],[3,4],[5,0]],{});
+    s+=lb(pyr[0],'N');
+
+    var C8=bz[0];                                    // [-58.89,-34]
+    if (kind==='hq'){
+      s+=ln(C8,[C8[0],-69],0,0);
+      s+=lb([C8[0],-80],'OH');
+      return s;
+    }
+    /* 磺酰胺链：C8—N(H)—S(=O)₂—对甲苯基（S 走斜上方向，避开 2 位甲基） */
+    var Np=[C8[0],-78], Sp=[Np[0]+36, Np[1]-21];
+    s+=ln(C8,Np,0,11);
+    s+=lb(Np,'N');
+    s+=lb([Np[0]-15,Np[1]-11],'H',true);
+    s+=ln(Np,Sp,11,10);
+    s+=lb(Sp,'S');
+    var O1=[Sp[0]+16, Sp[1]+27.7], O2=[Sp[0]-16, Sp[1]-27.7];
+    s+=dbl(Sp,O1,8,8); s+=dbl(Sp,O2,8,8);
+    s+=lb(O1,'O'); s+=lb(O2,'O');
+    /* 对甲苯基 */
+    var attach=[Sp[0]+44, Sp[1]];
+    var ph=hexRot(attach[0]+R, attach[1]);
+    s+=ln(Sp,attach,10,0);
+    s+=ring(ph,[attach[0]+R,attach[1]],[[0,1],[2,3],[4,5]],{});
+    var me=[ph[0][0]+40,ph[0][1]];
+    s+=ln(ph[0],me,0,9);
+    s+=lb([me[0]+14,me[1]],'CH₃');
+    /* Zinquin：2 位甲基 */
+    if (kind==='zin'){
+      var d=[0.866,-0.5], e=[pyr[1][0]+40*d[0], pyr[1][1]+40*d[1]];
+      s+=ln(pyr[1],e,0,9);
+      s+=lb([e[0]+13*d[0]+2, e[1]+13*d[1]-2],'CH₃');
+    }
+    return s;
+  }
+
+  var VB='<svg viewBox="-100 -140 290 200" xmlns="http://www.w3.org/2000/svg">';
+  ['hq','tsq','zin'].forEach(function(k){
+    document.getElementById('m-'+k).innerHTML = VB + svgFor(k) + '</svg>';
+  });
+
+  document.getElementById('hl').onchange = function(){
+    document.body.classList.toggle('nohl', !this.checked);
+  };
+})();
+</script>
+
+</body>
+</html>

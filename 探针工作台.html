@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>探针工作台 · 结构简式 + 滴定台 + 立体结构模型</title>
+<style>
+  :root{ --bg:#0f1218; --bar:#151a23; --line:#232a36; --line2:#2c3644;
+         --ink:#e9edf5; --ink2:#b9c6d8; --ink3:#8fa2b8; --blue:#2d6bc4; }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{ margin:0; background:var(--bg); color:var(--ink); overflow:hidden;
+        font-family:"Microsoft YaHei","PingFang SC","Source Han Sans SC",sans-serif; }
+  header{ display:flex; align-items:center; gap:12px; height:56px; padding:0 16px;
+          background:var(--bar); border-bottom:1px solid var(--line); }
+  .brand{ font-size:14.5px; font-weight:700; letter-spacing:.02em; white-space:nowrap; }
+  .brand span{ font-size:12.5px; font-weight:400; color:var(--ink3); margin-left:10px; }
+  nav{ display:flex; gap:8px; margin-left:8px; }
+  nav button{ font:inherit; font-size:14px; cursor:pointer; padding:8px 20px; border-radius:9px;
+              border:1px solid var(--line2); background:#1b212c; color:var(--ink2); transition:.15s; }
+  nav button:hover{ border-color:#3d4a5c; color:var(--ink); }
+  nav button.on{ background:linear-gradient(135deg,#1b3a7a,#2d6bc4); color:#fff; border-color:var(--blue); }
+  .right{ margin-left:auto; display:flex; align-items:center; gap:8px; }
+  .mini{ font:inherit; font-size:12.5px; color:var(--ink3); text-decoration:none; cursor:pointer;
+         border:1px solid var(--line2); background:transparent; border-radius:8px; padding:6px 12px;
+         white-space:nowrap; }
+  .mini:hover{ color:var(--ink); border-color:#3d4a5c; }
+  main{ position:absolute; top:56px; left:0; right:0; bottom:0; }
+  .pane{ position:absolute; inset:0; visibility:hidden; }
+  .pane.on{ visibility:visible; }
+  .pane iframe{ width:100%; height:100%; border:0; display:block; background:#fff; }
+  #pane-model iframe{ background:#0b0f14; }
+  @media (max-width:980px){ .brand span{display:none;} }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="mini" id="homeBtn" href="site/index.html">&#8592; 工具总览</a>
+  <div class="brand">探针工作台<span>《"配"有可为》第三部分 · 课堂演示</span></div>
+  <nav>
+    <button data-pane="struct" class="on">① 结构简式</button>
+    <button data-pane="lab">② 滴定台</button>
+    <button data-pane="model">③ 立体结构模型</button>
+  </nav>
+  <div class="right">
+    <button class="mini" id="fs">全屏</button>
+    <a class="mini" id="solo" href="结构简式.html" target="_blank" rel="noopener">单独打开</a>
+  </div>
+</header>
+
+<main>
+  <div class="pane on" id="pane-struct">
+    <iframe id="ifStruct" src="结构简式.html?embed=1"
+            title="三代探针结构简式对照"></iframe>
+  </div>
+  <div class="pane" id="pane-lab">
+    <iframe id="ifLab" src="探针设计实验室.html?embed=1"
+            title="探针设计实验室 · 滴定台"></iframe>
+  </div>
+  <div class="pane" id="pane-model">
+    <iframe id="ifModel" data-src="立体结构模型.html?embed=1"
+            title="配合物立体结构模型（三维）"></iframe>
+  </div>
+</main>
+
+<script>
+(function(){
+  var SOLO  = { lab:'探针设计实验室.html', model:'立体结构模型.html', struct:'结构简式.html' };
+  var PANES = { lab:document.getElementById('pane-lab'), model:document.getElementById('pane-model'),
+                struct:document.getElementById('pane-struct') };
+  var BTNS  = [].slice.call(document.querySelectorAll('nav button'));
+  var solo  = document.getElementById('solo');
+  var loaded = { struct:true, lab:true };   /* 结构简式与滴定台都很小，随页面一起载入 */
+
+  function frameOf(n){ return PANES[n].querySelector('iframe'); }
+
+  function show(name, silent){
+    if (!PANES[name]) name = 'struct';
+    var f = frameOf(name);
+    /* 懒加载：立体模型 670 KB，首次切到它时才开始解析 */
+    if (f && f.dataset.src && !loaded[name]){ f.src = f.dataset.src; loaded[name] = true; }
+    Object.keys(PANES).forEach(function(k){ PANES[k].classList.toggle('on', k === name); });
+    BTNS.forEach(function(b){ b.classList.toggle('on', b.dataset.pane === name); });
+    solo.setAttribute('href', SOLO[name]);
+    if (!silent){ try{ if (location.hash !== '#' + name) location.hash = name; }catch(e){} }
+    /* 切回来时"推一把"：聚焦（键盘方向键可用）＋ 触发 resize（跨域时静默跳过） */
+    setTimeout(function(){
+      if (!f) return;
+      try { f.focus(); } catch(e){}
+      try { f.contentWindow.dispatchEvent(new Event('resize')); } catch(e){}
+    }, 80);
+  }
+
+  BTNS.forEach(function(b){ b.onclick = function(){ show(b.dataset.pane); }; });
+  addEventListener('hashchange', function(){ show((location.hash || '').replace(/^#/, ''), true); });
+
+  document.getElementById('fs').onclick = function(){
+    if (document.fullscreenElement) document.exitFullscreen();
+    else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+  };
+
+  /* 左上"工具总览"：目标页不存在（如只拷了投放包）时自动隐藏 */
+  var home = document.getElementById('homeBtn');
+  if (home){
+    fetch(home.getAttribute('href'), { method:'HEAD' })
+      .then(function(r){ if (!r.ok) home.style.display = 'none'; })
+      .catch(function(){ home.style.display = 'none'; });
+  }
+
+  show((location.hash || '').replace(/^#/, '') || 'struct', true);
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>探针设计实验室 · 专一性荧光探针的诞生</title>
+<style>
+:root{
+  --ink:#1a1f2e; --ink2:#4a5266; --ink3:#828a9c;
+  --line:#e3e7ef; --bg:#f5f7fa; --card:#fff;
+  --blue:#2158c4; --teal:#0d7a72; --amber:#a86400; --purple:#6b3fa0;
+  --green:#1f9d67; --red:#c0392b; --orange:#c2700a;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.8;
+  font-family:"Microsoft YaHei","PingFang SC","Source Han Sans SC",sans-serif;}
+.wrap{max-width:1080px;margin:0 auto;padding:0 26px;}
+
+/* ---------- 头部 ---------- */
+.head{background:linear-gradient(135deg,#0f2a5c 0%,#1d4f9e 46%,#0b6b63 100%);color:#fff;
+  padding:36px 0 32px;}
+.head .kk{font-size:12px;letter-spacing:.2em;opacity:.75;margin:0 0 10px;}
+.head h1{margin:0 0 10px;font-size:25px;letter-spacing:.01em;}
+.head p{margin:0;font-size:13.8px;opacity:.9;max-width:800px;line-height:1.85;}
+
+main{padding:24px 0 56px;}
+/* ---------- 引导条 ---------- */
+.guide{background:#fff;border:1px solid var(--line);border-left:4px solid var(--amber);
+  border-radius:11px;padding:12px 18px;font-size:13.5px;color:var(--ink2);
+  margin-bottom:18px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;}
+.guide b{color:var(--ink);}
+.guide .play{margin-left:auto;background:var(--amber);color:#fff;border:0;border-radius:8px;
+  padding:8px 15px;font-size:13px;font-family:inherit;font-weight:700;cursor:pointer;
+  white-space:nowrap;transition:.15s;}
+.guide .play:hover{background:#8a5300;}
+.guide .play:disabled{opacity:.5;cursor:default;}
+
+/* ---------- 实验台 ---------- */
+.bench{display:grid;grid-template-columns:214px minmax(0,1fr) 214px;gap:16px;align-items:start;}
+@media(max-width:900px){ .bench{grid-template-columns:1fr;} }
+
+.rack{background:#fff;border:1px solid var(--line);border-radius:13px;padding:14px 13px;}
+.rack h3{margin:0 0 11px;font-size:12px;color:var(--ink3);font-weight:700;letter-spacing:.08em;}
+.pick{display:block;width:100%;text-align:left;background:#f7f9fd;border:1.5px solid var(--line);
+  border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;font-family:inherit;
+  transition:.15s;}
+.pick:last-child{margin-bottom:0;}
+.pick:hover{border-color:#b9cdf3;background:#eef4ff;}
+.pick.on{border-color:var(--blue);background:#e8f0ff;box-shadow:0 0 0 3px rgba(33,88,196,.1);}
+.pick .nm{font-size:14.5px;font-weight:700;color:var(--ink);display:block;}
+.pick .sub{font-size:11.5px;color:var(--ink3);display:block;line-height:1.55;margin-top:2px;}
+.pick .tg{display:inline-block;font-size:10.5px;background:#e8ecf5;color:#5b6577;
+  border-radius:4px;padding:1px 6px;margin-top:5px;}
+.pick.on .tg{background:#d3e0fb;color:var(--blue);}
+.pick.cu.on{border-color:#d98324;background:#fdf3e6;box-shadow:0 0 0 3px rgba(217,131,36,.12);}
+.pick.cu.on .tg{background:#f7e0c4;color:#9a5a10;}
+.pick.zn.on{border-color:#159a6d;background:#e6f7f0;box-shadow:0 0 0 3px rgba(21,154,109,.12);}
+.pick.zn.on .tg{background:#c9efdf;color:#0c6b4a;}
+
+/* 暗室 */
+.dark{position:relative;border-radius:16px;padding:20px 16px 18px;
+  background:radial-gradient(130% 105% at 50% 0%,#1c2547 0%,#0a0e1c 100%);
+  border:1px solid #2a3350;box-shadow:inset 0 0 60px rgba(60,110,220,.1);}
+.uv{position:absolute;top:11px;left:50%;transform:translateX(-50%);font-size:10.5px;
+  letter-spacing:.18em;color:#8fb0ff;opacity:.7;font-weight:600;}
+.stage{display:flex;gap:8px;align-items:center;justify-content:center;padding-top:26px;
+  flex-wrap:wrap;}
+@media(max-width:520px){ .stage{gap:0;} }
+
+.cuv{position:relative;width:88px;height:142px;border-radius:5px 5px 9px 9px;flex:0 0 auto;
+  border:1.5px solid rgba(170,200,255,.4);border-top:none;
+  background:linear-gradient(100deg,rgba(255,255,255,.09),rgba(255,255,255,.015) 45%,rgba(255,255,255,.07));}
+.cuv::after{content:"";position:absolute;left:-6px;top:-7px;right:-6px;height:7px;
+  border:1.5px solid rgba(170,200,255,.4);border-radius:3px;background:rgba(255,255,255,.04);}
+.liq{position:absolute;left:1.5px;right:1.5px;bottom:1.5px;height:58%;border-radius:0 0 7px 7px;
+  transition:background .55s,box-shadow .55s;}
+.halo{position:absolute;left:50%;top:62%;transform:translate(-50%,-50%);width:60px;height:60px;
+  border-radius:50%;pointer-events:none;filter:blur(14px);transition:all .55s;}
+
+.molbox{flex:0 0 auto;}
+.molbox svg{display:block;width:198px;height:auto;}
+@media(max-width:900px){ .molbox svg{width:180px;} }
+
+.vdict{margin-top:14px;text-align:center;font-size:13px;color:#c8d6ee;line-height:1.7;
+  padding:0 6px;min-height:44px;}
+.vdict b{color:#ffd479;}
+
+/* ---------- 读数 ---------- */
+.readout{display:grid;grid-template-columns:176px 176px minmax(0,1fr);gap:14px;margin-top:16px;}
+@media(max-width:900px){ .readout{grid-template-columns:1fr;} }
+.ro{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 15px 14px;}
+.ro .lbl{font-size:11px;color:var(--ink3);letter-spacing:.07em;font-weight:700;}
+.ro .val{font-size:17px;font-weight:800;margin-top:3px;letter-spacing:.01em;}
+.val.ok{color:var(--green);} .val.no{color:#98a1b3;}
+.val.warn{color:var(--orange);} .val.off{color:#bbb;}
+.bar{height:7px;border-radius:4px;background:#eef1f7;margin-top:9px;overflow:hidden;}
+.bar i{display:block;height:100%;width:0;border-radius:4px;
+  background:linear-gradient(90deg,#37c97f,#9ade4a);transition:width .55s;}
+.ro p{margin:4px 0 0;font-size:13.5px;color:var(--ink2);line-height:1.78;}
+.ro p b{color:var(--ink);}
+.ro p em{font-style:normal;color:var(--blue);font-weight:700;}
+.ro p.warn b{color:var(--orange);}
+
+/* ---------- 追加实验条 ---------- */
+.retest{margin-top:16px;background:#fff;border:1.5px dashed #b8c6de;border-radius:12px;
+  padding:11px 18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;
+  font-size:13.5px;color:var(--ink2);}
+.retest b{color:var(--ink);}
+.retest button{font-family:inherit;font-size:13.5px;font-weight:700;cursor:pointer;
+  border:0;border-radius:9px;padding:8px 18px;white-space:nowrap;transition:.15s;
+  background:var(--red);color:#fff;margin-left:auto;}
+.retest button:hover{background:#9c2d20;}
+.retest button.back{background:#5b6577;}
+.retest button.back:hover{background:#444d5c;}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);
+  font-size:12.5px;color:var(--ink3);line-height:1.9;}
+
+#err{position:fixed;left:0;right:0;bottom:0;background:#7a1d1d;color:#ffdede;
+  font-size:12.5px;padding:8px 16px;z-index:99;display:none;font-family:Consolas,monospace;}
+</style>
+</head>
+<body>
+
+<div class="head">
+  <div class="wrap">
+    <p class="kk">"配"有可为 —— 从离子显色到荧光探针的配位调控</p>
+    <h1>探针设计实验室</h1>
+    <p>一支"只认锌"的荧光探针是怎么被一步步设计出来的？这里把三代分子的改造过程放进同一个实验台：选一支探针、滴一种离子，看它<b>抓不抓得住</b>、<b>亮不亮得起来</b>。左边两栏是操作，中间是暗室里的紫外灯与比色皿，下面两个读数分别对应"抓住"与"报告"——它们不是一回事。</p>
+  </div>
+</div>
+
+<main>
+<div class="wrap">
+
+<!-- ================= 标签一：滴定台 ================= -->
+<section id="bench" class="on">
+  <div class="guide">
+    <span><b>三步走：</b>先选 8-HQS 滴 Mg²⁺ —— 亮；再换 TSQ 滴 Mg²⁺ —— 灭；最后换 Zinquin 滴 Cu²⁺ —— 还是灭。</span>
+    <button class="play" id="playBtn">▶ 自动走一遍</button>
+  </div>
+
+  <div class="retest" id="retest">
+    <span><b>终极检验：</b>先让探针抓住 Zn²⁺ 发亮，再把 Cu²⁺ 滴进同一支比色皿 —— 光会被猝灭吗？</span>
+    <button id="reBtn">＋ 再滴入 Cu²⁺</button>
+  </div>
+
+  <div class="bench">
+    <div class="rack">
+      <h3>① 选一支探针</h3>
+      <div id="probeRack"></div>
+    </div>
+
+    <div class="dark">
+      <div class="uv">UV 365 nm</div>
+      <div class="stage">
+        <div class="cuv">
+          <div class="liq" id="liq"></div>
+          <div class="halo" id="halo"></div>
+        </div>
+        <div class="molbox" id="molbox"></div>
+      </div>
+      <div class="vdict" id="vdict">—</div>
+    </div>
+
+    <div class="rack">
+      <h3>② 滴一种离子</h3>
+      <div id="ionRack"></div>
+    </div>
+  </div>
+
+  <div class="readout">
+    <div class="ro">
+      <div class="lbl">配位 · 抓得住吗</div>
+      <div class="val" id="roB">—</div>
+    </div>
+    <div class="ro">
+      <div class="lbl">荧光 · 报得出吗</div>
+      <div class="val" id="roE">—</div>
+      <div class="bar"><i id="roBar"></i></div>
+    </div>
+    <div class="ro">
+      <div class="lbl">解读</div>
+      <p id="roN">—</p>
+    </div>
+  </div>
+</section>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    配套课例：《"配"有可为——从离子显色到荧光探针的配位调控》· 第三部分"专一性探针的设计"<br>
+    本页为单文件网页，可离线使用。所有亮/灭与结合判断均为<b>教学模型</b>，用于呈现筛选逻辑，不是实验测定数据；真实体系中还受溶剂效应、配位水、动力学过程等因素影响。<br>
+    结构坐标按 8-羟基喹啉母核的真实几何（芳环边长 1.40 Å、咬合角 83°、M–N 约 2.05 Å）绘制，其原理与"配合物立体结构模型"一致。
+  </div>
+</footer>
+
+<div id="err"></div>
+
+<script>
+/* ==================== 全局错误提示（保证任何异常都看得见） ==================== */
+window.onerror = function(msg, src, line){
+  var e = document.getElementById('err');
+  e.style.display = 'block';
+  e.textContent = '脚本错误：' + msg + '  @line ' + line;
+};
+
+/* ==================== 探针与离子数据 ==================== */
+var PROBES = [
+  { id:'hq',  nm:'8-HQS',   sub:'8-羟基喹啉 · 母体',  donor:'给体：N ＋ O⁻', tag:'起点' },
+  { id:'tsq', nm:'TSQ 型',  sub:'8-磺酰胺基喹啉',      donor:'给体：N ＋ N',  tag:'改造 ① 换 O→N' },
+  { id:'zin', nm:'Zinquin', sub:'2-甲基-TSQ',          donor:'给体：N ＋ N ＋ CH₃', tag:'改造 ② 加甲基' }
+];
+
+var IONS = [
+  { id:'Mg', nm:'Mg²⁺', sub:'硬酸 · 无 d 电子' },
+  { id:'Ca', nm:'Ca²⁺', sub:'硬酸 · 无 d 电子' },
+  { id:'Cu', nm:'Cu²⁺', sub:'交界偏软 · d⁹ 顺磁' },
+  { id:'Zn', nm:'Zn²⁺', sub:'交界 · d¹⁰ 抗磁' }
+];
+
+/* [ 是否抓住 , 荧光强度 0-100 ] */
+var DATA = {
+  hq : { Mg:[1,86], Ca:[1,66], Cu:[1, 0], Zn:[1,92] },
+  tsq: { Mg:[0, 0], Ca:[0, 0], Cu:[1, 0], Zn:[1,88] },
+  zin: { Mg:[0, 0], Ca:[0, 0], Cu:[0, 0], Zn:[1,90] }
+};
+
+var NOTE = {
+  'hq|Mg' : '<b>抓住了，也亮了。</b>但这不是好消息——8-HQS 对 Mg²⁺、Ca²⁺、Cu²⁺、Zn²⁺ <em>一视同仁</em>。只要样本里有镁或钙（它们比锌多得多），探针就会亮，而你根本分不清亮的是谁。',
+  'hq|Ca' : '<b>抓住了，也亮了。</b>钙在体液中的浓度远高于锌。这种"来者不拒"的响应意味着：探针一进样本就先被钙占满，真正想测的锌反而没有位置。',
+  'hq|Cu' : '<b>抓住了，但光被掐灭。</b>Cu²⁺ 是 d⁹ 顺磁离子，配位以后会把激发态的能量夺走——这就是猝灭。请注意这里出现了第一个关键区分：<em>抓得住 ≠ 报得出</em>。',
+  'hq|Zn' : '<b>抓住了，也亮了。</b>这正是我们想要的信号。可惜 8-HQS 给不出"这个信号只属于锌"的保证——把上面三种离子挨个试一遍，它照样亮。',
+  'tsq|Mg': '<b>抓不住了。</b>给体从酚氧 O⁻（硬）换成磺酰胺 N（软）之后，口袋突然"硌手"：硬酸 Mg²⁺ 找不到匹配的给体，干脆不进来。<em>第一个干扰，屏蔽成功。</em>',
+  'tsq|Ca': '<b>抓不住了。</b>与 Mg²⁺ 同理——钙也是硬酸，只认硬给体。换掉一个氧，就把整个碱土金属家族请出了门外。',
+  'tsq|Cu': '<b>还是进来了。</b>铜是"交界"酸，软的氮给体它照样接得住。所以"换 N"只解决了碱土金属，<em>铜这一关还没过</em>。而且铜顺磁，进来之后照样把光掐灭。',
+  'tsq|Zn': '<b>抓住了，也亮了。</b>而这一次，Mg²⁺ 和 Ca²⁺ 都被挡在门外。但换个离子试试：把 Cu²⁺ 滴进去，<em>它还是抓得住</em>。还差一步。',
+  'zin|Mg': '<b>依旧进不来。</b>这是"换 N"那一层的功劳，2-位甲基在这里没有额外贡献。',
+  'zin|Ca': '<b>依旧进不来。</b>同 Mg²⁺——碱土金属在上一代就已经被请出去了。',
+  'zin|Cu': '<b>进不来了。</b>2-位甲基顶在 C2 上、正对配位口袋：铜要的<em>平面四方</em>摆不出来——两个甲基会迎头相撞。锌不挑构型，照坐不误。<em>第二重保险到位。</em>',
+  'zin|Zn': '<b>抓住了，也亮了。</b>而这一次，Mg²⁺、Ca²⁺、Cu²⁺ <em>全都进不来</em>。这就是第一支真正做到"只认锌"的探针——Zinquin。'
+};
+
+/* 追加实验：先让探针抓住 Zn²⁺ 发亮，再滴入 Cu²⁺ —— 看光还在不在 */
+var SECOND = {
+  hq : { emit:0,  binds:true,
+         vdict:'铜一进来，光就没了 —— 和前面滴铜的下场一样。',
+         note:'<b>光被猝灭了。</b>Cu²⁺ 与 8-HQS 的结合比 Zn²⁺ 还强，它把锌从口袋里挤出去；顺磁的 d⁹ 电子云一进口袋，激发态的能量就被夺走。<em>母体探针的信号，一滴铜就能毁掉。</em>' },
+  tsq: { emit:0,  binds:true,
+         vdict:'铜还是进得来 —— 光照样被掐灭。',
+         note:'<b>光被猝灭了。</b>TSQ 挡得住镁和钙，却挡不住铜：交界酸照样配氮给体，挤走锌、掐灭荧光。<em>换 N 那把锁，锁不住铜。</em>' },
+  zin: { emit:90, binds:false,
+         vdict:'铜进不来 —— 光还在！锌的信号毫发无损。',
+         note:'<b>光没有灭。</b>Cu²⁺ 被门口的 2-位甲基顶住，连口袋都进不去，自然掐不灭已经点亮的锌信号。<em>这就是"专一"的最终检验：不是没有干扰离子，而是干扰来了也破坏不了信号。</em>' }
+};
+
+var VSHORT = {
+  'hq|Mg' :'抓住了，也亮了 —— 但镁、钙、铜、锌它都抓。',
+  'hq|Ca' :'抓住了，也亮了 —— 钙比锌多得多，信号被它占住。',
+  'hq|Cu' :'抓住了，光却被掐灭 —— 抓住不等于报告。',
+  'hq|Zn' :'抓住了，也亮了 —— 可惜这个信号并不专属于锌。',
+  'tsq|Mg':'抓不住了 —— 硬酸认不得软的氮给体。',
+  'tsq|Ca':'抓不住了 —— 碱土金属被请出门外。',
+  'tsq|Cu':'还是进来了 —— 铜接得住软的氮给体，这一步没过关。',
+  'tsq|Zn':'抓住了，也亮了 —— 但铜依然进得来。',
+  'zin|Mg':'依旧进不来。',
+  'zin|Ca':'依旧进不来。',
+  'zin|Cu':'进不来了 —— 平面四方被甲基堵死。',
+  'zin|Zn':'抓住了，也亮了 —— 这一次，只认锌。'
+};
+
+/* ==================== 喹啉骨架真实几何（单位 Å） ==================== */
+var AP = 1.4 * Math.sqrt(3) / 2;
+var QUIN = {
+  C4a:[AP, 0.7], C4:[0, 1.4], C3:[-AP, 0.7], C2:[-AP, -0.7],
+  N1:[0, -1.4], C8a:[AP, -0.7], C8:[2*AP, -1.4], C7:[3*AP, -0.7],
+  C6:[3*AP, 0.7], C5:[2*AP, 1.4]
+};
+var QB = [['C4a','C4'],['C4','C3'],['C3','C2'],['C2','N1'],['N1','C8a'],
+          ['C8a','C4a'],['C8a','C8'],['C8','C7'],['C7','C6'],['C6','C5'],['C5','C4a']];
+
+function norm2(x, y){ var n = Math.hypot(x, y) || 1; return [x/n, y/n]; }
+
+function cross2(P1, r1, P2, r2, far){
+  var dx = P2[0]-P1[0], dy = P2[1]-P1[1], d = Math.hypot(dx, dy);
+  var a = (d*d + r1*r1 - r2*r2) / (2*d);
+  var h = Math.sqrt(Math.max(0, r1*r1 - a*a));
+  var mx = P1[0] + a*dx/d, my = P1[1] + a*dy/d;
+  var ux = -dy/d, uy = dx/d;
+  var c1 = [mx + h*ux, my + h*uy], c2 = [mx - h*ux, my - h*uy];
+  var d1 = Math.hypot(c1[0]-far[0], c1[1]-far[1]);
+  var d2 = Math.hypot(c2[0]-far[0], c2[1]-far[1]);
+  return d1 >= d2 ? c1 : c2;
+}
+
+/* 由探针类型解出全部几何：P 骨架、X 8-位给体、M 金属落点、ME 2-位甲基 */
+function geom(probe){
+  var P = {}, k;
+  for (k in QUIN) P[k] = QUIN[k].slice();
+  var o = cross2(P.C8, 1.36, P.N1, 2.70, [2*AP, 0]);
+  var u = norm2(o[0]-P.C8[0], o[1]-P.C8[1]);
+  var len = (probe === 'hq') ? 1.36 : 1.40;
+  var rD  = (probe === 'hq') ? 2.00 : 2.05;
+  var X = [P.C8[0] + len*u[0], P.C8[1] + len*u[1]];
+  var M = cross2(P.N1, 2.05, X, rD, P.C8);
+  var ME = null;
+  if (probe === 'zin'){
+    var d = norm2(P.C2[0], P.C2[1]);
+    ME = [P.C2[0] + 1.50*d[0], P.C2[1] + 1.50*d[1]];
+  }
+  return { P:P, X:X, M:M, ME:ME, rD:rD };
+}
+
+/* ==================== 结构简式 SVG ==================== */
+var SG = 34;                                  // px per Å
+function px(p){ return [p[0]*SG, -p[1]*SG]; } // 直接给 SVG 坐标（y 已翻转）
+
+var MCOL = { Mg:'#3d7ce0', Ca:'#8a5fd0', Cu:'#e0862a', Zn:'#12a476' };
+
+function molSVG(probe, ion, dark, showMetal, extraCu){
+  var g = geom(probe);
+  var t = dark
+    ? { line:'#c7d5ec', ring:'#7f9cc4', lbl:'#e4ecf9', txt:'#9fb6d6', hole:'#5c6f92' }
+    : { line:'#39465e', ring:'#93a6c4', lbl:'#1a1f2e', txt:'#5b6577', hole:'#c3cbd9' };
+  var binds = DATA[probe][ion][0];
+  var out = [];
+
+  /* 环上骨架 */
+  QB.forEach(function(b){
+    var a = px(g.P[b[0]]), c = px(g.P[b[1]]);
+    out.push('<line x1="'+a[0].toFixed(1)+'" y1="'+a[1].toFixed(1)+'" x2="'+c[0].toFixed(1)+'" y2="'+c[1].toFixed(1)+
+             '" stroke="'+t.line+'" stroke-width="2.4" stroke-linecap="round"/>');
+  });
+  /* 芳香内圈：喹啉 10 π 电子，两环都按芳香环画 */
+  var rr = (1.4*0.56*SG).toFixed(1);
+  out.push('<circle cx="0" cy="0" r="'+rr+'" fill="none" stroke="'+t.ring+'" stroke-width="1.7"/>');
+  out.push('<circle cx="'+(2*AP*SG).toFixed(1)+'" cy="0" r="'+rr+'" fill="none" stroke="'+t.ring+'" stroke-width="1.7"/>');
+
+  /* N1 原子 */
+  var n1 = px(g.P.N1);
+  out.push('<circle cx="'+n1[0].toFixed(1)+'" cy="'+n1[1].toFixed(1)+'" r="7" fill="#3f7fd8"/>');
+  out.push('<text x="'+n1[0].toFixed(1)+'" y="'+(n1[1]+4).toFixed(1)+'" font-size="12" fill="#fff" font-weight="700" text-anchor="middle">N</text>');
+
+  /* 8 位给体 */
+  var c8 = px(g.P.C8), xp = px(g.X);
+  out.push('<line x1="'+c8[0].toFixed(1)+'" y1="'+c8[1].toFixed(1)+'" x2="'+xp[0].toFixed(1)+'" y2="'+xp[1].toFixed(1)+
+           '" stroke="'+t.line+'" stroke-width="2.4" stroke-linecap="round"/>');
+  var xcol = (probe === 'hq') ? '#e8524f' : '#3f7fd8';
+  out.push('<circle cx="'+xp[0].toFixed(1)+'" cy="'+xp[1].toFixed(1)+'" r="7.4" fill="'+xcol+'"/>');
+  out.push('<text x="'+xp[0].toFixed(1)+'" y="'+(xp[1]+4).toFixed(1)+'" font-size="12" fill="#fff" font-weight="700" text-anchor="middle">'+
+           (probe === 'hq' ? 'O' : 'N')+'</text>');
+  var u8 = norm2(g.X[0]-g.P.C8[0], g.X[1]-g.P.C8[1]);
+  var tx = px([g.X[0] + u8[0]*0.90, g.X[1] + u8[1]*0.90]);
+  out.push('<text x="'+(tx[0]+10).toFixed(1)+'" y="'+(tx[1]+4).toFixed(1)+'" font-size="12.5" font-weight="700" fill="'+t.txt+'">'+
+           (probe === 'hq' ? 'OH' : 'NHSO₂Ar')+'</text>');
+
+  /* 2 位甲基 */
+  if (g.ME){
+    var c2 = px(g.P.C2), mp = px(g.ME);
+    out.push('<line x1="'+c2[0].toFixed(1)+'" y1="'+c2[1].toFixed(1)+'" x2="'+mp[0].toFixed(1)+'" y2="'+mp[1].toFixed(1)+
+             '" stroke="'+t.line+'" stroke-width="2.4" stroke-linecap="round"/>');
+    out.push('<text x="'+(mp[0]-8).toFixed(1)+'" y="'+(mp[1]+4).toFixed(1)+'" font-size="12.5" font-weight="800" fill="#d98324" text-anchor="end">CH₃</text>');
+  }
+
+  /* 金属离子 */
+  if (showMetal !== false){
+    var mc = MCOL[ion] || '#888';
+    var mpp;
+    if (binds){
+      mpp = px(g.M);
+      out.push('<circle cx="'+mpp[0].toFixed(1)+'" cy="'+mpp[1].toFixed(1)+'" r="10" fill="'+mc+'" opacity=".95"/>');
+      out.push('<circle cx="'+mpp[0].toFixed(1)+'" cy="'+mpp[1].toFixed(1)+'" r="14" fill="none" stroke="'+mc+'" stroke-width="1.4" opacity=".45"/>');
+      /* 配位键 */
+      [[g.P.N1, '#3f7fd8'], [g.X, xcol]].forEach(function(pr){
+        var q = px(pr[0]);
+        out.push('<line x1="'+mpp[0].toFixed(1)+'" y1="'+mpp[1].toFixed(1)+'" x2="'+q[0].toFixed(1)+'" y2="'+q[1].toFixed(1)+
+                 '" stroke="'+mc+'" stroke-width="2" stroke-dasharray="3 3" opacity=".8"/>');
+      });
+    } else {
+      /* 进不来：金属停在口袋外，口袋位置上画一个叉 */
+      var hole = px([3.55, -4.55]);
+      mpp = hole;
+      out.push('<circle cx="'+mpp[0].toFixed(1)+'" cy="'+mpp[1].toFixed(1)+'" r="10" fill="'+mc+'" opacity=".55"/>');
+      var hx = px(g.M);
+      var s = 8;
+      out.push('<line x1="'+(hx[0]-s)+'" y1="'+(hx[1]-s)+'" x2="'+(hx[0]+s)+'" y2="'+(hx[1]+s)+'" stroke="#e8524f" stroke-width="2.6" stroke-linecap="round"/>');
+      out.push('<line x1="'+(hx[0]+s)+'" y1="'+(hx[1]-s)+'" x2="'+(hx[0]-s)+'" y2="'+(hx[1]+s)+'" stroke="#e8524f" stroke-width="2.6" stroke-linecap="round"/>');
+      out.push('<line x1="'+(hx[0]+s+2)+'" y1="'+(hx[1]-10)+'" x2="'+(mpp[0]-11)+'" y2="'+(mpp[1]-4)+
+               '" stroke="'+mc+'" stroke-width="1.6" stroke-dasharray="4 4" opacity=".6"/>');
+    }
+    out.push('<text x="'+mpp[0].toFixed(1)+'" y="'+(mpp[1]+4).toFixed(1)+'" font-size="11" fill="#fff" font-weight="800" text-anchor="middle">'+
+             ion+'</text>');
+  }
+
+  /* 追加实验（Zinquin）：Cu²⁺ 想凑过来，被甲基顶在门口——锌稳坐口袋，光不灭 */
+  if (extraCu){
+    var cc = MCOL['Cu'];
+    var hole = px([3.55, -4.55]), hxx = px(g.M);
+    var mid = [(hole[0]+hxx[0])/2, (hole[1]+hxx[1])/2];
+    out.push('<line x1="'+hole[0].toFixed(1)+'" y1="'+hole[1].toFixed(1)+'" x2="'+hxx[0].toFixed(1)+'" y2="'+hxx[1].toFixed(1)+
+             '" stroke="'+cc+'" stroke-width="1.6" stroke-dasharray="4 4" opacity=".55"/>');
+    var sx = 7;
+    out.push('<line x1="'+(mid[0]-sx).toFixed(1)+'" y1="'+(mid[1]-sx).toFixed(1)+'" x2="'+(mid[0]+sx).toFixed(1)+'" y2="'+(mid[1]+sx).toFixed(1)+
+             '" stroke="#e8524f" stroke-width="2.4" stroke-linecap="round"/>');
+    out.push('<line x1="'+(mid[0]+sx).toFixed(1)+'" y1="'+(mid[1]-sx).toFixed(1)+'" x2="'+(mid[0]-sx).toFixed(1)+'" y2="'+(mid[1]+sx).toFixed(1)+
+             '" stroke="#e8524f" stroke-width="2.4" stroke-linecap="round"/>');
+    out.push('<circle cx="'+hole[0].toFixed(1)+'" cy="'+hole[1].toFixed(1)+'" r="9" fill="'+cc+'" opacity=".6"/>');
+    out.push('<text x="'+hole[0].toFixed(1)+'" y="'+(hole[1]+4).toFixed(1)+'" font-size="10.5" fill="#fff" font-weight="800" text-anchor="middle">Cu</text>');
+    out.push('<text x="'+hole[0].toFixed(1)+'" y="'+(hole[1]+22).toFixed(1)+'" font-size="11" fill="#e8a08d" font-weight="700" text-anchor="middle">被甲基挡住</text>');
+  }
+
+  return '<svg viewBox="-130 -64 272 236" xmlns="http://www.w3.org/2000/svg">' +
+         '<rect x="-130" y="-64" width="272" height="236" fill="none"/>' +
+         out.join('') + '</svg>';
+}
+
+/* ==================== 状态与渲染 ==================== */
+var st = { p:'hq', i:'Mg', cu:false, playing:false };
+
+function $(id){ return document.getElementById(id); }
+
+function buildPickers(){
+  $('probeRack').innerHTML = PROBES.map(function(p){
+    return '<button class="pick" data-p="'+p.id+'">' +
+             '<span class="nm">'+p.nm+'</span>' +
+             '<span class="sub">'+p.sub+' · '+p.donor+'</span>' +
+             '<span class="tg">'+p.tag+'</span>' +
+           '</button>';
+  }).join('');
+  $('ionRack').innerHTML = IONS.map(function(x){
+    var cls = 'pick' + (x.id === 'Cu' ? ' cu' : '') + (x.id === 'Zn' ? ' zn' : '');
+    return '<button class="'+cls+'" data-i="'+x.id+'">' +
+             '<span class="nm">'+x.nm+'</span>' +
+             '<span class="sub">'+x.sub+'</span>' +
+           '</button>';
+  }).join('');
+  [].forEach.call($('probeRack').children, function(b){
+    b.onclick = function(){ if (st.playing) return; st.p = b.dataset.p; st.cu = false; render(); };
+  });
+  [].forEach.call($('ionRack').children, function(b){
+    b.onclick = function(){ if (st.playing) return; st.i = b.dataset.i; st.cu = false; render(); };
+  });
+}
+
+function render(){
+  var key = st.p + '|' + st.i;
+  var d = DATA[st.p][st.i];
+  var binds = d[0], emit = d[1];
+  var cuDrop = st.cu && st.i === 'Zn' && binds && emit >= 55;   /* 追加实验生效中 */
+  if (cuDrop){
+    var s2 = SECOND[st.p];
+    binds = s2.binds; emit = s2.emit;                           /* 读数改判：对象换成后滴的 Cu²⁺ */
+  }
+
+  /* 选中态 */
+  [].forEach.call($('probeRack').children, function(b){ b.classList.toggle('on', b.dataset.p === st.p); });
+  [].forEach.call($('ionRack').children,   function(b){ b.classList.toggle('on', b.dataset.i === st.i); });
+
+  /* 比色皿发光 */
+  var g = emit / 100;
+  var liq = $('liq'), halo = $('halo');
+  if (emit >= 55){
+    liq.style.background = 'linear-gradient(180deg, rgba(214,255,170,'+(0.55+0.4*g)+'), rgba(126,236,92,'+(0.6+0.4*g)+'))';
+    liq.style.boxShadow = '0 0 '+(18+46*g).toFixed(0)+'px rgba(150,255,110,'+(0.4+0.5*g)+') inset';
+    halo.style.width = halo.style.height = (46+88*g).toFixed(0)+'px';
+    halo.style.background = 'rgba(150,255,110,'+(0.28+0.42*g)+')';
+  } else if (binds){
+    liq.style.background = 'linear-gradient(180deg, rgba(120,170,220,.30), rgba(90,140,200,.42))';
+    liq.style.boxShadow = 'none';
+    halo.style.width = halo.style.height = '24px';
+    halo.style.background = 'rgba(120,160,220,.16)';
+  } else {
+    liq.style.background = 'linear-gradient(180deg, rgba(110,140,190,.16), rgba(90,115,165,.22))';
+    liq.style.boxShadow = 'none';
+    halo.style.width = halo.style.height = '0px';
+    halo.style.background = 'transparent';
+  }
+
+  /* 分子图 */
+  if (cuDrop){
+    if (st.p === 'zin'){
+      /* 锌稳坐口袋 + 铜被挡在门口 */
+      $('molbox').innerHTML = molSVG('zin', 'Zn', true, true, true);
+    } else {
+      /* 铜挤进来接管口袋（hq/tsq：随后猝灭） */
+      $('molbox').innerHTML = molSVG(st.p, 'Cu', true, true);
+    }
+  } else {
+    $('molbox').innerHTML = molSVG(st.p, st.i, true, true);
+  }
+
+  /* 暗室结论 */
+  $('vdict').innerHTML = cuDrop ? SECOND[st.p].vdict : VSHORT[key];
+
+  /* 读数 */
+  var ionLbl = cuDrop ? 'Cu²⁺' : IONS.filter(function(x){ return x.id === st.i; })[0].nm;
+  $('roB').textContent = binds ? '抓住了（' + ionLbl + '）' : '抓不住（' + ionLbl + '）';
+  $('roB').className = 'val ' + (binds ? 'ok' : 'no');
+  $('roE').textContent = emit >= 55 ? '亮（' + emit + '）' : (binds ? '灭（0）' : '无信号');
+  $('roE').className = 'val ' + (emit >= 55 ? 'ok' : (binds ? 'warn' : 'no'));
+  $('roBar').style.width = emit + '%';
+  $('roN').innerHTML = cuDrop ? SECOND[st.p].note : NOTE[key];
+
+  /* 追加实验条：只在"探针 + Zn²⁺ 且发亮"时出现 */
+  var showBar = (st.i === 'Zn' && DATA[st.p].Zn[0] === 1 && DATA[st.p].Zn[1] >= 55 && !st.playing);
+  $('retest').style.display = showBar ? 'flex' : 'none';
+  $('reBtn').className = st.cu ? 'back' : '';
+  $('reBtn').textContent = st.cu ? '↩ 倒掉重做（撤回 Cu²⁺）' : '＋ 再滴入 Cu²⁺';
+}
+
+/* ==================== 自动演示 ==================== */
+var SEQ = [
+  ['hq','Mg'], ['hq','Cu'], ['tsq','Mg'], ['tsq','Cu'], ['zin','Cu'], ['zin','Zn'], ['zin','Zn', 1]
+];
+function play(){
+  if (st.playing) return;
+  st.playing = true;
+  $('playBtn').disabled = true;
+  $('playBtn').textContent = '演示中…';
+  var k = 0;
+  (function next(){
+    if (k >= SEQ.length){
+      st.playing = false;
+      $('playBtn').disabled = false;
+      $('playBtn').textContent = '▶ 自动走一遍';
+      render();
+      return;
+    }
+    st.p = SEQ[k][0]; st.i = SEQ[k][1]; st.cu = !!SEQ[k][2];
+    render();
+    k++;
+    setTimeout(next, 2400);
+  })();
+}
+$('playBtn').onclick = play;
+$('reBtn').onclick = function(){ if (st.playing) return; st.cu = !st.cu; render(); };
+
+/* ==================== 启动（支持 ?p=zin&i=Zn&cu=1 直达某个实验状态） ==================== */
+(function init(){
+  var q = {};
+  location.search.replace(/^\?/, '').split('&').forEach(function(kv){
+    if (!kv) return;
+    var a = kv.split('=');
+    q[a[0]] = decodeURIComponent(a[1] || '');
+  });
+  if (q.p && DATA[q.p]) st.p = q.p;
+  if (q.i && DATA[st.p] && DATA[st.p][q.i]) st.i = q.i;
+  if (q.cu === '1') st.cu = true;
+  buildPickers();
+  render();
+  window.scrollTo(0, 0);
+})();
+</script>
+</body>
+</html>
